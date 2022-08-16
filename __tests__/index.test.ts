@@ -13,7 +13,7 @@ describe('POST /login', () => {
         const decodedToken = jwt.verify(response.body, config.app.jwtPrivateKey)
         expect(credentials.username).toEqual((decodedToken as jwt.JwtPayload).username)
     })
-    test('Wrong username', async () => {
+    test('Return 403 if wrong username', async () => {
         const credentials = {
             username: 'NotAtester',
             password: 'senhatester'
@@ -21,7 +21,7 @@ describe('POST /login', () => {
         const response = await request(app).post('/login').send(credentials);
         expect(response.status).toEqual(403)
     })
-    test('Wrong password', async () => {
+    test('Return 403 if wrong password', async () => {
         const credentials = {
             username: 'tester',
             password: 'NotAsenhatester'
@@ -29,7 +29,7 @@ describe('POST /login', () => {
         const response = await request(app).post('/login').send(credentials);
         expect(response.status).toEqual(403)
     })
-    test('Invalid body request', async () => {
+    test('Return 400 if invalid body request', async () => {
         const credentials = {
             username: 'tester',
         }
@@ -39,7 +39,7 @@ describe('POST /login', () => {
 })
 
 describe('GET /breweries', () => {
-    test('Authenticated user, no query param', async () => {
+    test('Return complete list if Authenticated user, no query param', async () => {
         const token = jwt.sign({
             id: '1',
             username: 'tester',
@@ -53,7 +53,7 @@ describe('GET /breweries', () => {
             })
         ]));
     });
-    test('Authenticated user, query fat-orange-cat', async () => {
+    test('Return query list if Authenticated user, query fat-orange-cat', async () => {
         const token = jwt.sign({
             id: '1',
             username: 'tester',
